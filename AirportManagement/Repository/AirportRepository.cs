@@ -3,6 +3,7 @@ using AirportManagement.Dtos;
 using AirportManagement.Helper;
 using AirportManagement.Interfaces;
 using AirportManagement.Models;
+using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
 namespace AirportManagement.Repository
@@ -64,6 +65,37 @@ namespace AirportManagement.Repository
             _context.SaveChangesAsync();
 
             return newAirport;
+        }
+        public async Task<SearchResponseDto<Airport>> SearchAirportByCountry(SearchAirportByCountryQuery query)
+        {
+
+            var searchResult = _context.tblCountry.Where(c => c.countryId == query.countryId)
+                                                  .SelectMany(c => c.cities)
+                                                  .SelectMany(city => city.airports)
+                                                  .AsQueryable();
+
+            var sortErrorMsg = ValidateSortingAttribute.ValidationSortError<Airport>(query.sortField, query.sortDirection);
+
+            if (sortErrorMsg.Length > 0)
+                throw new Exception(sortErrorMsg);
+            else
+            {
+                Expression<Func<Airport, object>> keySelector = query.sortField.ToLower() switch
+                {
+                    "airportname" => c => c.airportName,
+                    _ => throw new NotImplementedException(),
+                };
+
+                searchResult = ValidateSortingAttribute.IsDescending(query.sortDirection)
+                 ? searchResult.OrderByDescending(keySelector)
+                 : searchResult.OrderBy(keySelector);
+
+                return await SearchResponseDto<Airport>.CreateAsync(
+                   searchResult,
+                   query.pageNumber,
+                   query.pageSize
+                );
+            }
         }
     }
 }

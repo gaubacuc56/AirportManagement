@@ -11,7 +11,7 @@ namespace AirportManagement.Repository
     public class CountryRepository : ICountryRepository
     {
         private readonly DataContext _context;
-
+ 
         public CountryRepository(DataContext context)
         {
             _context = context;

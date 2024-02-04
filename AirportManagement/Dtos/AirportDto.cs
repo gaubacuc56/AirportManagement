@@ -1,4 +1,6 @@
-﻿namespace AirportManagement.Dtos
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace AirportManagement.Dtos
 {
     public class AirportDto
     {
@@ -13,6 +15,15 @@
             // Initialize sortField with a default value
             sortField = "airportName";
         }
-
+    }
+    public class SearchAirportByCountryQuery : SearchQueryDto
+    {
+        [Required(ErrorMessage = "The countryId field is required.")]
+        public Guid countryId { get; set; }
+        public SearchAirportByCountryQuery()
+        {
+            // Initialize sortField with a default value
+            sortField = "airportName";
+        }
     }
 }

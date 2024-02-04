@@ -68,5 +68,20 @@ namespace AirportManagement.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
+        [HttpGet("searchByCountry")]
+        public async Task<IActionResult> SearchAiportByCountry([FromQuery] SearchAirportByCountryQuery query)
+        {
+            try
+            {
+                var city = await _airportRepository.SearchAirportByCountry(query);
+                return CustomResult(_mapper.Map<SearchResponseDto<AirportDto>>(city));
+            }
+            catch (Exception ex)
+            {
+                if (ex != null)
+                    return CustomResult(ex.Message, HttpStatusCode.BadRequest);
+                else return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
     }
 }
