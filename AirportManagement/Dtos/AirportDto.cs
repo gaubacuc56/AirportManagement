@@ -6,6 +6,7 @@ namespace AirportManagement.Dtos
     {
         public Guid airportId { get; set; }
         public string airportName { get; set; }
+        public string airportCode { get; set; }
     }
     public class SearchAirportQuery : SearchQueryDto
     {

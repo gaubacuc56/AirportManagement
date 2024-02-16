@@ -7,7 +7,7 @@ namespace AirportManagement.Interfaces
     {
         Task<Airport> GetAirportById(Guid id);
         Task<SearchResponseDto<Airport>> SearchAirport(SearchAirportQuery query);
-        Task<Airport> CreateAirport(string cityName, Guid countryId);
+        Task<Airport> CreateAirport(Guid cityId, string airportName, string airportCode);
         Task<SearchResponseDto<Airport>> SearchAirportByCountry(SearchAirportByCountryQuery query);
 
     }

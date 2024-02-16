@@ -3,7 +3,6 @@ using AirportManagement.Dtos;
 using AirportManagement.Helper;
 using AirportManagement.Interfaces;
 using AirportManagement.Models;
-using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
 namespace AirportManagement.Repository
@@ -47,8 +46,13 @@ namespace AirportManagement.Repository
                 );
             }
         }
-        public async Task<Airport> CreateAirport(string airportName, Guid cityId)
+        public async Task<Airport> CreateAirport(Guid cityId, string airportName, string airportCode)
         {
+            if (_context.tblAirport.Where(c => c.airportName == airportName || c.airportCode == airportCode).Any())
+            {
+                throw new Exception("Airport already exists");
+            }
+
             var city = _context.tblCity.Find(cityId);
             if (city == null)
             {
@@ -58,11 +62,12 @@ namespace AirportManagement.Repository
             var newAirport = new Airport
             {
                 airportName = airportName,
+                airportCode = airportCode,
                 cityId = cityId,
                 city = city
             };
             _context.Add(newAirport);
-            _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
 
             return newAirport;
         }

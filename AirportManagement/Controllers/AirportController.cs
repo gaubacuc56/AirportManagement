@@ -1,11 +1,8 @@
 ﻿using AirportManagement.Dtos;
 using AirportManagement.Interfaces;
-using AirportManagement.Models;
-using AirportManagement.Repository;
 using AutoMapper;
 using CoreApiResponse;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Net;
 
 namespace AirportManagement.Controllers
@@ -32,9 +29,11 @@ namespace AirportManagement.Controllers
                 var airport = await _airportRepository.GetAirportById(id);
                 return Ok(airport);
             }
-            catch
+            catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                if (ex != null)
+                    return CustomResult(ex.Message, HttpStatusCode.BadRequest);
+                else return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
 
@@ -55,17 +54,19 @@ namespace AirportManagement.Controllers
         }
 
         [HttpPost("create")]
-        public async Task<IActionResult> CreateAirport(string airportName,string cityId)
+        public async Task<IActionResult> CreateAirport(string cityId, string airportName, string airportCode)
         {
             try
             {
                 var cityIdGuid = new Guid(cityId);
-                var city = await _airportRepository.CreateAirport(airportName, cityIdGuid);
-                return Ok(city);
+                var airport = await _airportRepository.CreateAirport(cityIdGuid, airportName, airportCode);
+                return CustomResult("Successfully", HttpStatusCode.Created);
             }
-            catch
+            catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                if (ex != null)
+                    return CustomResult(ex.Message, HttpStatusCode.BadRequest);
+                else return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
         [HttpGet("searchByCountry")]

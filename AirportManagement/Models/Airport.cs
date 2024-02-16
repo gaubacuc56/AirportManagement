@@ -11,6 +11,8 @@ namespace AirportManagement.Models
         public Guid airportId { get; set; }
         [Required]
         public string airportName { get; set; }
+        [Required]
+        public string airportCode {get; set; }
         [ForeignKey("City")]
         public Guid cityId { get; set; }
         //navigation properties

@@ -1,9 +1,4 @@
-﻿using AirportManagement.Models;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Serilog;
-using System.ComponentModel.DataAnnotations;
-using System.Dynamic;
-using System.Reflection;
+﻿using System.Dynamic;
 
 namespace AirportManagement.Helper
 {

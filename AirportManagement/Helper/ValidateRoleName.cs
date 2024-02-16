@@ -1,5 +1,4 @@
 ﻿using AirportManagement.Models;
-using System;
 using System.ComponentModel.DataAnnotations;
 namespace AirportManagement.Helper
 {

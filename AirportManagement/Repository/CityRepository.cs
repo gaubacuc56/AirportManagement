@@ -4,7 +4,6 @@ using AirportManagement.Helper;
 using AirportManagement.Interfaces;
 using AirportManagement.Models;
 using Microsoft.EntityFrameworkCore;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using System.Linq.Expressions;
 
 namespace AirportManagement.Repository
