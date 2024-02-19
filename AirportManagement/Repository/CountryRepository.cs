@@ -69,7 +69,7 @@ namespace AirportManagement.Repository
 
             return newCountry;
         }
-        public async Task<Country> UpdateCountry(Guid id, Dtos.UpdateCountryDto country)
+        public async Task<Country> UpdateCountry(Guid id, UpdateCountryDto country)
         {
             // Check if the country is existed before adding
             if (_context.tblCountry.Where(c => c.countryName == country.countryName).Any())

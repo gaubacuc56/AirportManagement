@@ -7,12 +7,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using Serilog.Formatting.Json;
 using Serilog;
 using Swashbuckle.AspNetCore.Filters;
 using System.Text;
 using System.Text.Json.Serialization;
-using Serilog;
  
 var builder = WebApplication.CreateBuilder(args);
 

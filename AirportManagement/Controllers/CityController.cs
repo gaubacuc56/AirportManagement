@@ -2,11 +2,13 @@
 using AirportManagement.Interfaces;
 using AutoMapper;
 using CoreApiResponse;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
 namespace AirportManagement.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class CityController : BaseController
@@ -18,7 +20,7 @@ namespace AirportManagement.Controllers
             _cityRepository = cityRepository;
             _mapper = mapper;
         }
-
+        [AllowAnonymous]
         [HttpGet]
         [Route("{id}")]
         public async Task<IActionResult> GetCityById(Guid id)
@@ -33,8 +35,8 @@ namespace AirportManagement.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
-
-        [HttpGet("search")]
+        [AllowAnonymous]
+        [HttpGet("search"), Authorize(Roles = "Admin")]
         public async Task<IActionResult> SearchCity([FromQuery] SearchCityQuery query)
         {
             try
@@ -50,12 +52,12 @@ namespace AirportManagement.Controllers
             }
         }
         [HttpPost("create")]
-        public async Task<IActionResult> CreateCity(string cityName, string countryId)
+        public async Task<IActionResult> CreateCity(string cityName, string cityId)
         {
             try
             {
-                var countryIdGuid = new Guid(countryId);
-                await _cityRepository.CreateCity(cityName, countryIdGuid);
+                var cityIdGuid = new Guid(cityId);
+                await _cityRepository.CreateCity(cityName, cityIdGuid);
                 return CustomResult("Successfully", HttpStatusCode.Created);
             }
             catch (Exception ex)
@@ -65,7 +67,7 @@ namespace AirportManagement.Controllers
                 else return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
-
+        [AllowAnonymous]
         [HttpGet("searchByCountry")]
         public async Task<IActionResult> SearchCityByCountry([FromQuery] SearchCityByCountryQuery query)
         {
@@ -73,6 +75,36 @@ namespace AirportManagement.Controllers
             {
                 var city = await _cityRepository.SearchCityByCountry(query);
                 return CustomResult(_mapper.Map<SearchResponseDto<CityDto>>(city));
+            }
+            catch (Exception ex)
+            {
+                if (ex != null)
+                    return CustomResult(ex.Message, HttpStatusCode.BadRequest);
+                else return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+        [HttpPut("{id}"), Authorize(Roles = "Admin")]
+        public async Task<IActionResult> UpdateCity(Guid id, [FromBody] Dtos.UpdateCityDto city)
+        {
+            try
+            {
+                await _cityRepository.UpdateCity(id, city);
+                return CustomResult("Successfully", HttpStatusCode.OK);
+            }
+            catch (Exception ex)
+            {
+                if (ex != null)
+                    return CustomResult(ex.Message, HttpStatusCode.BadRequest);
+                else return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+        [HttpDelete("{id}"), Authorize(Roles = "Admin")]
+        public async Task<IActionResult> DeleteCity(Guid id)
+        {
+            try
+            {
+                await _cityRepository.DeleteCity(id);
+                return CustomResult("Successfully", HttpStatusCode.OK);
             }
             catch (Exception ex)
             {

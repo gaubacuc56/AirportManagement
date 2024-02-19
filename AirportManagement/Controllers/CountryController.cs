@@ -1,6 +1,5 @@
 ﻿using AirportManagement.Dtos;
 using AirportManagement.Interfaces;
-using AirportManagement.Models;
 using AutoMapper;
 using CoreApiResponse;
 using Microsoft.AspNetCore.Authorization;
@@ -9,7 +8,7 @@ using System.Net;
 
 namespace AirportManagement.Controllers
 {
-   // [Authorize]
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class CountryController: BaseController
@@ -21,6 +20,7 @@ namespace AirportManagement.Controllers
             _countryRepository = countryRepository;
             _mapper = mapper;
         }
+        [AllowAnonymous]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetCountryById(Guid id)
         {
@@ -36,7 +36,8 @@ namespace AirportManagement.Controllers
                 else return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
-        [HttpGet("search")/*, Authorize(Roles = "Admin")*/]
+        [AllowAnonymous]
+        [HttpGet("search")]
         public async Task<IActionResult> SearchCountry([FromQuery] SearchCountryQuery query)
         {
             try
@@ -51,7 +52,8 @@ namespace AirportManagement.Controllers
                 else return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
-        [HttpPost("create")]
+        [AllowAnonymous]
+        [HttpPost("create"), Authorize(Roles = "Admin")]
         public async Task<IActionResult> CreateCountry(string countryName)
         {
             try
@@ -66,7 +68,7 @@ namespace AirportManagement.Controllers
                 else return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
-        [HttpPut("{id}")]
+        [HttpPut("{id}"), Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateCountry(Guid id, [FromBody] Dtos.UpdateCountryDto country)
         {
             try
@@ -81,7 +83,7 @@ namespace AirportManagement.Controllers
                 else return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
-        [HttpDelete("{id}")]
+        [HttpDelete("{id}"), Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteCountry(Guid id)
         {
             try

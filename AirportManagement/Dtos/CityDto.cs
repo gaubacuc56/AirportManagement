@@ -26,4 +26,8 @@ namespace AirportManagement.Dtos
             sortField = "cityName";
         }
     }
+    public class UpdateCityDto
+    {
+        public string cityName { get; set; }
+    }
 }

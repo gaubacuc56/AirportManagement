@@ -9,5 +9,7 @@ namespace AirportManagement.Interfaces
         Task<SearchResponseDto<City>> SearchCity(SearchCityQuery search);
         Task<City> CreateCity(string cityName, Guid countryId);
         Task<SearchResponseDto<City>> SearchCityByCountry(SearchCityByCountryQuery search);
+        Task<City> UpdateCity(Guid id, UpdateCityDto city);
+        Task<City> DeleteCity(Guid id);
     }
 }

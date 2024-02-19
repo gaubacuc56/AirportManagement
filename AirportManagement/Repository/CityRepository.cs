@@ -104,5 +104,35 @@ namespace AirportManagement.Repository
                 );
             }
         }
+        public async Task<City> UpdateCity(Guid id, UpdateCityDto city)
+        {
+            // Check if the city is existed before adding
+            if (_context.tblCity.Where(c => c.cityName == city.cityName).Any())
+            {
+                throw new Exception("City already exists");
+            }
+
+            var existingCity = _context.tblCity.Where(c => c.cityId == id).FirstOrDefault();
+
+            if (existingCity == null)
+            {
+                throw new Exception("City not found");
+            }
+            existingCity.cityName = city.cityName;
+            await _context.SaveChangesAsync();
+            return existingCity;
+        }
+        public async Task<City> DeleteCity(Guid id)
+        {
+            var existingCity = _context.tblCity.Where(c => c.countryId == id).FirstOrDefault();
+
+            if (existingCity == null)
+            {
+                throw new Exception("City not found");
+            }
+            _context.Remove(existingCity);
+            await _context.SaveChangesAsync();
+            return existingCity;
+        }
     }   
 } 
